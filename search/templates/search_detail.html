@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Searches{% endblock %}
+
+{% block content %}
+<div class="container">
+
+  <div class="row">
+    <div class="col-sm-12">
+
+
+     <h2>Search result</h2>
+  <p>Number of results {{ search_result | length }}</p>
+  <p>Subject: {{ search.input | safe }}</p>
+  <p>Keyword language: {{ search.lang | upper }}</p>
+  <p>Keywords count:</p>
+
+  <ul>
+    {% for key, value in data.items %}
+      <li>{{key}}: {{value}}</li>
+    {% endfor %}
+  </ul>
+
+  <br>
+    <div class="list-group">
+      {% for result in search_result %}
+        <a href="{{ result.link |safe }}" target="_blank" class="list-group-item list-group-item-action flex-column align-items-start">
+          <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">{{ result.article |safe }}</h5>
+          </div>
+          <p class="mb-1">Link: {{ result.link |safe }}</p>
+          <p class="mb-1">Domain: {{ result.domain | safe }}</p>
+          <p class="mb-1">Desc: {{ result.description | safe }}</p>
+          <p class="mb-1">Topic: {{ result.topic | safe }}</p>
+        </a>
+      {% endfor %}
+    </div>
+
+    </div>
+  </div>
+
+
+</div>
+{% endblock content %}
+

@@ -5,6 +5,7 @@ import spacy
 from spacy.lang.fr.stop_words import STOP_WORDS as sw_fr
 from spacy.lang.en.stop_words import STOP_WORDS as sw_en
 from spacy.lang.de.stop_words import STOP_WORDS as sw_de
+from spacy.lang.es.stop_words import STOP_WORDS as sw_es
 from spacy.lang.hu.stop_words import STOP_WORDS as sw_hu
 from spacy.lang.pl.stop_words import STOP_WORDS as sw_pl
 from spacy_langdetect import LanguageDetector
@@ -16,6 +17,7 @@ class LanguageModels:
         self.stopword_fr = list(sw_fr)
         self.stopword_en = list(sw_en)
         self.stopword_de = list(sw_de)
+        self.stopword_es = list(sw_es)
         self.stopword_hu = list(sw_hu)
         self.stopword_pl = list(sw_pl)
 
@@ -68,6 +70,5 @@ class LanguageModels:
 
     @property
     def nlp_es(self):
-        return spacy.load('pl_core_news_sm')
-
+        return spacy.load('es_core_news_sm')
 

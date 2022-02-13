@@ -318,11 +318,11 @@ for s in range(len(a)): #range(len(a)):
                 else:
                     n=n+1
 
-            ID=pd.DataFrame(ID)
-            ID=ID.loc[:,[0]]
-            lem=pd.DataFrame(lem)
-            lem=lem.loc[:,[0]]
-            lang=pd.DataFrame(lang)
+            ID = pd.DataFrame(ID)
+            ID = ID.loc[:,[0]]
+            lem = pd.DataFrame(lem)
+            lem = lem.loc[:,[0]]
+            lang = pd.DataFrame(lang)
             lang=lang.loc[:,[0]]
             dd=pd.concat([ID,lem,lang], axis=1)
             dd.columns= ["ID", "unigrams","language"]

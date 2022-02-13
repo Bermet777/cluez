@@ -26,11 +26,13 @@ def tag_visible(element):
     return True
 
 
-def text_from_html(body):
-    soup = BeautifulSoup(body, 'html.parser')
+def text_from_html(html):
+    soup = BeautifulSoup(html, 'html.parser')
     texts = soup.findAll(text=True)
     visible_texts = filter(tag_visible, texts)
     return u" ".join(t.strip() for t in visible_texts)
+
+    soup = BeautifulSoup(html, features="html.parser")
 
 
 def sent_to_words(sentences):

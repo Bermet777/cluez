@@ -26,6 +26,9 @@
           <p class="mb-1">Subject name: {{ search.input |safe }}</p>
           <p class="mb-1">Keyword language: {{ search.lang |upper }}</p>
           <p class="mb-1">Region: {{ search.region |upper }}</p>
+
+          {% if user.is_staff %}<p class="mb-1">Duration: {{ search.duration }}</p>{% endif %}
+
           {% if not search.finished %}<small class="text-muted">Search in progress</small>
           {% else %}<small class="text-muted">Search is finished</small>
           {% endif %}

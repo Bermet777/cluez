@@ -13,6 +13,13 @@ class SearchAdminForm(forms.ModelForm):
 
 class SearchAdmin(admin.ModelAdmin):
     form = SearchAdminForm
+    list_display = [
+        "user",
+        "input",
+        "finished",
+        "result",
+        "duration",
+    ]
 
 
 class SearchResultAdminForm(forms.ModelForm):

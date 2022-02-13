@@ -54,32 +54,13 @@ services:
     image: redis:5.0
     container_name: redis
 
-  celeryworker:
+  qcluster:
     <<: *django
-    image: duegle_web_local_celeryworker
-    container_name: celeryworker
+    image: duegle_web_local_django
+    container_name: qcluster
     depends_on:
       - redis
       - postgres
-      
-    ports: []
-    command: /start-celeryworker
 
-  celerybeat:
-    <<: *django
-    image: duegle_web_local_celerybeat
-    container_name: celerybeat
-    depends_on:
-      - redis
-      - postgres
-      
     ports: []
-    command: /start-celerybeat
-
-  flower:
-    <<: *django
-    image: duegle_web_local_flower
-    container_name: flower
-    ports:
-      - "5555:5555"
-    command: /start-flower
+    command: /start-qcluster

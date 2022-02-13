@@ -23,12 +23,6 @@ RUN pip install --no-cache-dir -r /requirements/production.txt \
 
 # Install lang models
 RUN spacy download en
-RUN spacy download de
-RUN spacy download fr
-RUN spacy download pl_core_news_md
-COPY /mnt/HC_Volume_9642934/hu_core_ud_lg-0.3.1-py3-none-any.whl /models/
-#RUN pip install https://github.com/oroszgy/spacy-hungarian-models/releases/download/hu_core_ud_lg-0.3.1/hu_core_ud_lg-0.3.1-py3-none-any.whl
-RUN pip install /models/hu_core_ud_lg-0.3.1-py3-none-any.whl
 
 COPY --chown=django:django ./compose/production/django/entrypoint /entrypoint
 RUN sed -i 's/\r$//g' /entrypoint
@@ -51,6 +45,7 @@ RUN chmod +x /start-celerybeat
 COPY ./compose/production/django/celery/flower/start /start-flower
 RUN sed -i 's/\r$//g' /start-flower
 RUN chmod +x /start-flower
+
 COPY --chown=django:django . /app
 
 USER django

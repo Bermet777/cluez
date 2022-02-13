@@ -11,7 +11,7 @@ from django.utils.safestring import mark_safe
 from pandas.tseries.offsets import BDay
 
 from .models import Search, SearchResult
-from .tasks import search_task
+from .tasks import search_task, search_get_serp
 from .forms import SearchIndividualForm, SearchOrgForm
 
 
@@ -19,6 +19,7 @@ from .forms import SearchIndividualForm, SearchOrgForm
 # def highlight_search(text, search):
 #     highlighted = text.replace(search, '<span class="highlight">{}</span>'.format(search))
 #     return mark_safe(highlighted)
+
 
 
 @login_required
@@ -61,6 +62,7 @@ def search_results(request, search_id):
 
 @login_required
 def search_ind(request):
+    from django_q.tasks import async_task
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
@@ -78,8 +80,8 @@ def search_ind(request):
             )
             search.save()
             # process the data in form.cleaned_data as required
-            search_task.apply_async(args=(search.pk,))
-
+            #search_get_serp.apply_async(args=(search.pk,), link=search_task.s(search.pk))
+            async_task(search_get_serp, search.pk)
             return HttpResponseRedirect('/search/list/')
 
     # if a GET (or any other method) we'll create a blank form
@@ -91,6 +93,7 @@ def search_ind(request):
 
 @login_required
 def search_org(request):
+    from django_q.tasks import async_task
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
@@ -106,7 +109,8 @@ def search_org(request):
             )
             search.save()
             # process the data in form.cleaned_data as required
-            search_task.apply_async(args=(search.pk,))
+            #search_get_serp.apply_async(args=(search.pk,), link=search_task.s(search.pk))
+            async_task(search_get_serp, search.pk)
 
             return HttpResponseRedirect('/search/list/')
 

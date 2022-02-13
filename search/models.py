@@ -29,3 +29,4 @@ class Search(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     finished = models.BooleanField(default=False)
     result = models.TextField(null=True, blank=True, default=None)
+    duration = models.DurationField(null=True, blank=True)

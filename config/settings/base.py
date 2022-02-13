@@ -2,13 +2,16 @@
 Base settings to build other settings files upon.
 """
 from pathlib import Path
-
+import os
 import environ
 
 ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 # duegle_web/
 APPS_DIR = ROOT_DIR / "duegle_web"
 env = environ.Env()
+
+CELERY_LOADER = 'search.loader.CustomDjangoLoader'
+os.environ['CELERY_LOADER'] = CELERY_LOADER
 
 READ_DOT_ENV_FILE = env.bool("DJANGO_READ_DOT_ENV_FILE", default=False)
 if READ_DOT_ENV_FILE:
@@ -42,6 +45,7 @@ LOCALE_PATHS = [str(ROOT_DIR / "locale")]
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 DATABASES = {"default": env.db("DATABASE_URL")}
 DATABASES["default"]["ATOMIC_REQUESTS"] = True
+DATABASES["default"]["CONN_MAX_AGE"] = 0
 
 # URLS
 # ------------------------------------------------------------------------------
@@ -70,6 +74,7 @@ THIRD_PARTY_APPS = [
     "allauth.account",
     "allauth.socialaccount",
     "django_celery_beat",
+    'django_q',
 ]
 
 LOCAL_APPS = [
@@ -252,13 +257,28 @@ LOGGING = {
     "root": {"level": "INFO", "handlers": ["console"]},
 }
 
+# Q Cluster
+# ------------------------------------------------------------------------------
+Q_CLUSTER = {
+    'name': 'cluez',
+    'workers': 8,
+    'recycle': 500,
+    'timeout': 600,
+    'retry': 600,
+    'compress': True,
+    'cpu_affinity': 1,
+    'save_limit': 500,
+    'queue_limit': 500,
+    'label': 'Django Q',
+    'redis': env("REDIS_URL", default="redis://redis:6379"),
+}
 # Celery
 # ------------------------------------------------------------------------------
 if USE_TZ:
     # http://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-timezone
     CELERY_TIMEZONE = TIME_ZONE
 # http://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-broker_url
-CELERY_BROKER_URL = env("CELERY_BROKER_URL")
+CELERY_BROKER_URL = env("CELERY_BROKER_URL", default="")
 # http://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-result_backend
 CELERY_RESULT_BACKEND = CELERY_BROKER_URL
 # http://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-accept_content

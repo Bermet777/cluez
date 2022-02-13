@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load app_filters %}
 
 {% block title %}Searches{% endblock %}
 
@@ -14,13 +15,15 @@
   <p>Number of results {{ search_result | length }}</p>
   <p>Subject: {{ search.input | safe }}</p>
   <p>Keyword language: {{ search.lang | upper }}</p>
+  {% if user.is_staff %}<p>Duration: {{ search.duration }}</p>{% endif %}
   <p>Keywords count:</p>
 
-  <ul>
-    {% for key, value in data.items %}
-      <li>{{key}}: {{value}}</li>
-    {% endfor %}
-  </ul>
+      <ul>
+        {% for key, value in data.items %}
+          <li>{{key}}: {{value}}</li>
+        {% endfor %}
+      </ul>
+
 
   <br>
     <div class="list-group">
@@ -32,7 +35,14 @@
           <p class="mb-1">Link: {{ result.link |safe }}</p>
           <p class="mb-1">Domain: {{ result.domain | safe }}</p>
           <p class="mb-1">Desc: {{ result.description | safe }}</p>
-          <p class="mb-1">Topic: {{ result.topic | safe }}</p>
+{#          <p class="mb-1">Topic: {{ result.topic | safe }}</p>#}
+          <p class="mb-1">Keyword counts:          </p>
+
+          <ul>
+              {% for key, value in result.data.items %}
+                {% if value > 0 %}<li>{{key}}: {{value}}</li>{% endif %}
+              {% endfor %}
+            </ul>
         </a>
       {% endfor %}
     </div>
